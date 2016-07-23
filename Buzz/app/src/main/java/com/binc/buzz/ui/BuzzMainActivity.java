@@ -3,6 +3,7 @@ package com.binc.buzz.ui;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.SyncStateContract;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
 import com.binc.buzz.R;
+import com.binc.buzz.util.BuzzConstants;
 import com.jaouan.revealator.Revealator;
 
 import java.util.ArrayList;
@@ -81,14 +83,6 @@ public class BuzzMainActivity extends ListActivity {
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent login_intent = new Intent(BuzzMainActivity.this, LoginActivity.class);
-                BuzzMainActivity.this.startActivity(login_intent);
-            }
-        });
-
         //to identify gestures
         gesture = new GestureDetector(getBaseContext(),
                 new GestureDetector.SimpleOnGestureListener() {
@@ -151,6 +145,30 @@ public class BuzzMainActivity extends ListActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //get login status and update the fab button background
+        SharedPreferences sp = getSharedPreferences(BuzzConstants.SP_NAME, Context.MODE_PRIVATE);
+        boolean is_logged_in = sp.getBoolean(BuzzConstants.IS_LOGGED_IN, false);
+        if(is_logged_in){
+            fab.setOnClickListener(null);
+            fab.setImageResource(R.drawable.create_buzz);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent login_intent = new Intent(BuzzMainActivity.this, CreateBuzzActivity.class);
+                    BuzzMainActivity.this.startActivity(login_intent);
+                }
+            });
+        } else {
+            fab.setOnClickListener(null);
+            fab.setImageResource(R.drawable.add_user);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent login_intent = new Intent(BuzzMainActivity.this, LoginActivity.class);
+                    BuzzMainActivity.this.startActivity(login_intent);
+                }
+            });
+        }
     }
 
     private void fetchAndShowBuzz(int anim_type) {

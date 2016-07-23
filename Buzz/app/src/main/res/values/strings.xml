@@ -16,5 +16,6 @@
     </string>
     <string name="facebook_app_id">998665546837417</string>
     <string name="buzz">Buzz</string>
+    <string name="title_activity_create_buzz">CreateBuzzActivity</string>
 
 </resources>

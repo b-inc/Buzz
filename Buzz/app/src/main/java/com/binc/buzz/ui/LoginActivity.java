@@ -2,7 +2,9 @@ package com.binc.buzz.ui;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.binc.buzz.R;
+import com.binc.buzz.util.BuzzConstants;
 import com.binc.buzz.util.ThreadUtils;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.common.SignInButton;
@@ -53,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
             } else {
                 Log.d("[Handler]","onSuccess");
             }
+            loginStatus(true);
         }
 
         @Override
@@ -96,6 +100,15 @@ public class LoginActivity extends AppCompatActivity {
         initFacebookSignIn();
         initGoogleSignIn();
         initEmailSignIn();
+        //dummy
+        loginStatus(true);
+    }
+
+    private void loginStatus(boolean status){
+        SharedPreferences sp = LoginActivity.this.getSharedPreferences(BuzzConstants.SP_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putBoolean(BuzzConstants.IS_LOGGED_IN, status);
+        editor.apply();
     }
     private void initEmailSignIn(){
         //TODO : move login logic to custom provider
